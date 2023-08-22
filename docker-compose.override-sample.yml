@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:
+
+  mysql:
+    restart: 'no'
+
+  wordpress:
+    restart: 'no'
+    environment:
+      WORDPRESS_DEBUG: 'true'
+      WP_ENV: dev
+
+  nginx:
+    restart: 'no'
+    ports:
+      - '80:80'

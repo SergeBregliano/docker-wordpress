@@ -1,0 +1,63 @@
+version: '3.6'
+
+services:
+
+  mysql:
+    image: mariadb
+    restart: unless-stopped
+    volumes:
+      - './appData/mySQL:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+    networks:
+      - wordpress
+
+  wordpress:
+    build: docker/wordpress
+    restart: unless-stopped
+    #user: "33:33"
+    depends_on:
+      - mysql
+    volumes:
+      - './appData/wordpress/:/var/www/html/'
+      - './docker/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini'
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DEBUG: false
+      WP_ENV: prod
+      TZ: ${TIME_ZONE}
+    networks:
+      - wordpress
+
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    volumes:
+      # Conf
+      - './docker/nginx/conf.d:/etc/nginx/conf.d:ro'
+      - './appData/nginx/logs:/var/log/nginx'
+      # Exposes Wordpress
+      - ./appData/wordpress/:/var/www/html/:ro
+      - ./docker/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+    environment:
+      # Utilisation avec https-portal
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+    networks:
+      - wordpress
+      - gateway
+
+networks:
+
+  gateway:
+    name: ${FRONTEND_NETWORK}
+
+  wordpress:
+    name: ${BACKEND_NETWORK}
