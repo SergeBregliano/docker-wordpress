@@ -22,3 +22,11 @@ Lancer une mise à jour et la création des containters
 ```
 sh ./updateStack.sh
 ```
+
+
+
+## Taille des uploads
+
+Dans ``docker > wordpress > uploads.ini`` modifier les valeurs ``upload_max_filesize`` et ``post_max_size``.
+
+Dans ``docker > nginx > wordpress.conf`` modifier la valeur ``client_max_body_size``.
