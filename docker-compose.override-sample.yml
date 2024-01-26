@@ -8,8 +8,7 @@ services:
   wordpress:
     restart: 'no'
     environment:
-      WORDPRESS_DEBUG: 'true'
-      WP_ENV: dev
+      WORDPRESS_DEBUG: true
 
   nginx:
     restart: 'no'
