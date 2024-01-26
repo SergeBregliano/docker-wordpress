@@ -28,7 +28,7 @@ services:
   wordpress:
     build: docker/wordpress
     restart: unless-stopped
-    user: "33:33"
+    #user: "33:33"
     depends_on:
       - mysql
       - redis
