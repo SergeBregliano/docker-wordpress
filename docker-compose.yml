@@ -15,12 +15,23 @@ services:
     networks:
       - wordpress
 
+  # Redis necessite :
+  # - l'install de l'extension Redis Object Cache
+  # - la ligne suivante dans wp-config.php au dessus de require_once ABSPATH . 'wp-settings.php';
+  # define('WP_REDIS_HOST', 'redis');
+  redis:
+    image: 'redis:alpine'
+    restart: unless-stopped
+    networks:
+      - wordpress
+
   wordpress:
     build: docker/wordpress
     restart: unless-stopped
     #user: "33:33"
     depends_on:
       - mysql
+      - redis
     volumes:
       - './appData/wordpress/:/var/www/html/'
       - './docker/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini'
