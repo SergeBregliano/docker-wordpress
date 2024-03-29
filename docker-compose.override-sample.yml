@@ -5,6 +5,20 @@ services:
   mysql:
     restart: 'no'
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: 'no'
+    ports:
+      - '8080:80'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - PMA_HOST: mysql
+    networks:
+      - wordpress
+      - gateway
+    links:
+      - mysql:db
+
   wordpress:
     restart: 'no'
     environment:
