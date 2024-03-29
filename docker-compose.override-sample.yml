@@ -12,7 +12,7 @@ services:
       - '8080:80'
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - PMA_HOST: mysql
+      - PMA_HOST=mysql
     networks:
       - wordpress
       - gateway
